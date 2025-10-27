@@ -1,0 +1,103 @@
+.filters-section {
+  margin: 4rem 0;
+  padding: 3rem 0;
+}
+
+.filters-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.filters-subtitle {
+  text-align: center;
+  font-size: 1.1rem;
+  opacity: 0.8;
+  margin-bottom: 3rem;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.filter-card {
+  padding: 2rem;
+  border-radius: 16px;
+  background: var(--card-light);
+  border: 1px solid var(--border-light);
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+body.dark .filter-card {
+  background: var(--card-dark);
+  border-color: var(--border-dark);
+}
+
+.filter-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 32px rgba(59, 130, 246, 0.2);
+  border-color: var(--accent);
+}
+
+.filter-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.filter-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--accent);
+}
+
+.filter-card p {
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+.filters-note {
+  margin-top: 3rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: rgba(59, 130, 246, 0.1);
+  border-left: 4px solid var(--accent);
+  text-align: center;
+}
+
+.filters-note p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .filters-title {
+    font-size: 1.5rem;
+  }
+
+  .filters-subtitle {
+    font-size: 1rem;
+  }
+
+  .filter-card {
+    padding: 1.5rem;
+  }
+
+  .filter-icon {
+    font-size: 2.5rem;
+  }
+
+  .filter-card h3 {
+    font-size: 1.25rem;
+  }
+}

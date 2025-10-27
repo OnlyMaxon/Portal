@@ -1,0 +1,218 @@
+.mobile-app-section {
+  margin: 5rem 0;
+  padding: 3rem 0;
+}
+
+.app-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  padding: 4rem;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  color: white;
+  box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+}
+
+.app-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.app-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.app-description {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+.app-features {
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+.app-features li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  font-size: 1.05rem;
+}
+
+.feature-icon {
+  font-size: 1.5rem;
+}
+
+.app-badges {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.badge:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.badge-icon {
+  font-size: 2rem;
+}
+
+.badge-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.badge-label {
+  font-size: 0.75rem;
+  opacity: 0.9;
+}
+
+.badge-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.app-illustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.phone-mockup {
+  width: 280px;
+  height: 560px;
+  background: #1a1a1a;
+  border-radius: 40px;
+  padding: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  border: 8px solid #2a2a2a;
+}
+
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  background: white;
+  border-radius: 32px;
+  overflow: hidden;
+}
+
+.app-preview {
+  height: 100%;
+  background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-header {
+  padding: 1.5rem;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.preview-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.preview-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.preview-globe {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  animation: spin 20s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.preview-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #3b82f6;
+  text-align: center;
+}
+
+@media (max-width: 1024px) {
+  .app-card {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem;
+  }
+
+  .app-title {
+    font-size: 2rem;
+  }
+
+  .phone-mockup {
+    width: 240px;
+    height: 480px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-app-section {
+    margin: 3rem 0;
+  }
+
+  .app-card {
+    padding: 1.5rem;
+  }
+
+  .app-title {
+    font-size: 1.75rem;
+  }
+
+  .app-description {
+    font-size: 1rem;
+  }
+
+  .app-features li {
+    font-size: 0.95rem;
+  }
+
+  .phone-mockup {
+    width: 200px;
+    height: 400px;
+  }
+
+  .preview-globe {
+    font-size: 4rem;
+  }
+}
