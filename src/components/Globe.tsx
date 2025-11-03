@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Sphere, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import './Globe.css';
@@ -24,10 +24,13 @@ function EarthSphere({ theme, countries, onCountrySelect }: GlobeProps) {
   const cloudsRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState<string | null>(null);
   const [hoveredCity, setHoveredCity] = useState<string | null>(null);
+  const { gl } = useThree();
 
   // Public-domain/NASA based textures hosted by threejs.org examples
   // For production, consider downloading these into /public/textures/earth and referencing locally.
   const [colorMap, normalMap, specularMap, cloudsMap] = useTexture([
+    // NOTE: Replace these with local 4k/8k assets in /public/textures/earth/* for best results.
+    // Public-domain NASA textures are recommended.
     'https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg',
     'https://threejs.org/examples/textures/planets/earth_normal_2048.jpg',
     'https://threejs.org/examples/textures/planets/earth_specular_2048.jpg',
@@ -36,12 +39,27 @@ function EarthSphere({ theme, countries, onCountrySelect }: GlobeProps) {
 
   // Improve texture filtering
   useMemo(() => {
-    [colorMap, normalMap, specularMap, cloudsMap].forEach((tx) => {
+    const maxAniso = gl?.capabilities?.getMaxAnisotropy?.() ?? 16;
+    [colorMap, normalMap, specularMap, cloudsMap].forEach((tx, i) => {
       if (!tx) return;
-      tx.anisotropy = 8;
+      // Correct color space handling (albedo in sRGB, data maps in linear)
+      if (i === 0) {
+        // color (albedo)
+        if ((THREE as any).SRGBColorSpace && (tx as any)) {
+          (tx as any).colorSpace = (THREE as any).SRGBColorSpace;
+        }
+        if ((THREE as any).sRGBEncoding && (tx as any)) {
+          (tx as any).encoding = (THREE as any).sRGBEncoding;
+        }
+      }
+      tx.generateMipmaps = true;
+      tx.minFilter = THREE.LinearMipmapLinearFilter;
+      tx.magFilter = THREE.LinearFilter;
+      tx.anisotropy = Math.max(8, maxAniso);
       tx.wrapS = tx.wrapT = THREE.RepeatWrapping;
+      tx.needsUpdate = true;
     });
-  }, [colorMap, normalMap, specularMap, cloudsMap]);
+  }, [colorMap, normalMap, specularMap, cloudsMap, gl]);
 
   // Auto-rotate the entire world; add subtle extra rotation to clouds for drift
   useFrame((_state, delta) => {
@@ -88,7 +106,7 @@ function EarthSphere({ theme, countries, onCountrySelect }: GlobeProps) {
       <group ref={worldRef}>
         {/* Main Earth with textures */}
         <mesh ref={earthRef}>
-          <sphereGeometry args={[2, 128, 128]} />
+          <sphereGeometry args={[2, 256, 256]} />
           {/* Use Phong for specular map support on oceans */}
           {/* eslint-disable-next-line react/no-unknown-property */}
           <meshPhongMaterial
@@ -102,7 +120,7 @@ function EarthSphere({ theme, countries, onCountrySelect }: GlobeProps) {
 
         {/* Cloud layer (slightly larger radius) */}
         <mesh ref={cloudsRef}>
-          <sphereGeometry args={[2.03, 128, 128]} />
+          <sphereGeometry args={[2.03, 256, 256]} />
           <meshPhongMaterial
             map={cloudsMap as THREE.Texture}
             transparent
@@ -124,7 +142,7 @@ function EarthSphere({ theme, countries, onCountrySelect }: GlobeProps) {
               onPointerOut={() => setHovered(null)}
               onClick={() => onCountrySelect(country)}
             >
-              <sphereGeometry args={[isHovered ? 0.08 : 0.05, 16, 16]} />
+              <sphereGeometry args={[isHovered ? 0.08 : 0.05, 24, 24]} />
               <meshStandardMaterial
                 color={isHovered ? '#fbbf24' : '#ef4444'}
                 emissive={isHovered ? '#fbbf24' : '#ef4444'}
@@ -145,7 +163,7 @@ function EarthSphere({ theme, countries, onCountrySelect }: GlobeProps) {
               onPointerOver={() => setHoveredCity(city.name)}
               onPointerOut={() => setHoveredCity(null)}
             >
-              <sphereGeometry args={[isHovered ? 0.055 : 0.04, 12, 12]} />
+              <sphereGeometry args={[isHovered ? 0.055 : 0.04, 18, 18]} />
               <meshStandardMaterial
                 color={isHovered ? '#38bdf8' : '#22d3ee'}
                 emissive={isHovered ? '#38bdf8' : '#0891b2'}
@@ -156,7 +174,7 @@ function EarthSphere({ theme, countries, onCountrySelect }: GlobeProps) {
         })}
 
         {/* Subtle atmosphere glow */}
-        <Sphere args={[2.12, 128, 128]}>
+        <Sphere args={[2.12, 256, 256]}>
           <meshBasicMaterial
             color={theme === 'light' ? '#93c5fd' : '#60a5fa'}
             transparent
@@ -172,15 +190,19 @@ function EarthSphere({ theme, countries, onCountrySelect }: GlobeProps) {
 function Globe({ theme, countries, onCountrySelect }: GlobeProps) {
   return (
     <div className="globe-canvas">
-      <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
-        <ambientLight intensity={theme === 'light' ? 0.45 : 0.35} />
+      <Canvas
+        dpr={[1, 2.5]}
+        gl={{ antialias: true, powerPreference: 'high-performance' }}
+        camera={{ position: [0, 0, 5], fov: 45, near: 0.05, far: 1000 }}
+      >
+        <ambientLight intensity={theme === 'light' ? 0.5 : 0.4} />
         
         <EarthSphere theme={theme} countries={countries} onCountrySelect={onCountrySelect} />
         
         <OrbitControls
           enableZoom={true}
           enablePan={false}
-          minDistance={3.2}
+          minDistance={2.15}
           maxDistance={8}
           autoRotate={false}
         />
